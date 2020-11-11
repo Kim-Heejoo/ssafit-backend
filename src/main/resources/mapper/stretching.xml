@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ssafit.stretching">
+
+	<select id="getVideo"
+		parameterType="java.lang.Integer"
+		resultType="com.ssafit.dto.Video">
+		select video_id, title, file, description, thumbnail, time
+		from video
+		where video_id=#{video_id}
+	</select>
+	
+	<select id="getAllVideoList"
+		resultType="com.ssafit.dto.Video">
+		select video_id, title, file, thumbnail, description
+		from video v
+	</select>
+	
+	<select id="getVideoPart"
+		parameterType="java.lang.Integer"
+		resultType="java.lang.String">
+		select p.name
+		from part p, stretching s
+		where video_id=#{video_id} and p.part_id = s.part_id
+	</select>
+	
+	<insert id="setResult"
+		parameterType="java.lang.Integer">
+		insert into result(member_id, video_id, excellent, great, good, bad, datetime) 
+		values (#{member_id}, #{video_id}, #{excellent}, #{great}, #{good}, #{bad}, now())
+	</insert>
+	
+	<select id="getTodayStretchingCnt"
+		resultType="java.lang.Integer">
+		select count(*) from result 
+		where left(datetime,10)=left(now(),10)
+	</select>
+	
+	<select id="getStretchingMem"
+		resultType="java.lang.Integer">
+		select count(*) from members
+	</select>
+	
+	<select id="getStretchingTime"
+		parameterType="java.lang.Integer"
+		resultType="java.lang.Integer">
+		select time from video where video_id=#{video_id}
+	</select>
+	
+	<select id="getVideoList"
+		resultType="java.lang.Integer">
+		select video_id from video order by video_id
+	</select>
+	
+	<select id="getVideoStretchingCnt"
+		parameterType="java.lang.Integer"
+		resultType="java.lang.Integer">
+		select count(*) from result where video_id=#{video_id}
+	</select>
+	
+	<select id="getVideoPoint"
+		parameterType="java.lang.Integer"
+		resultType="com.ssafit.dto.VideoPoint">
+		select first_stop, second_stop, excellent, great, good from video where video_id=#{video_id}
+	</select>
+</mapper>
